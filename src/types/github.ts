@@ -97,6 +97,22 @@ function isGitHubPullRequestRef(value: unknown): value is GitHubPullRequestRef {
   );
 }
 
+/** Valida o payload de `/users/{username}` na fronteira `unknown`. */
+export function isGitHubUser(value: unknown): value is GitHubUser {
+  return (
+    isRecord(value) &&
+    typeof value['login'] === 'string' &&
+    isStringOrNull(value['name']) &&
+    typeof value['avatar_url'] === 'string' &&
+    typeof value['html_url'] === 'string' &&
+    isStringOrNull(value['bio']) &&
+    isStringOrNull(value['company']) &&
+    typeof value['followers'] === 'number' &&
+    typeof value['public_repos'] === 'number' &&
+    typeof value['created_at'] === 'string'
+  );
+}
+
 /** Valida na fronteira `unknown` antes de converter qualquer dado externo. */
 export function isGitHubIssue(value: unknown): value is GitHubIssue {
   if (!isRecord(value)) {
