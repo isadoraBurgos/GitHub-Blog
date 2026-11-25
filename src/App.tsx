@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { Container, Header } from '@/components/layout'
 import HomePage from '@/pages/HomePage.tsx'
+import NotFoundPage from '@/pages/NotFoundPage.tsx'
 import PostPage from '@/pages/PostPage.tsx'
 
 export default function App() {
@@ -13,7 +14,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/post/:number" element={<PostPage />} />
-            <Route path="*" element={<p>Página não encontrada.</p>} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Container>
       </main>
