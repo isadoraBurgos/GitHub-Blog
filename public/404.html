@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Blog</title>
+    <script>
+      // O GitHub Pages serve este arquivo para deep links. O index.html restaura a URL em src/main.tsx.
+      (function () {
+        var base = '/GitHub-Blog';
+        var path = window.location.pathname;
+        var relative = path.indexOf(base) === 0 ? path.slice(base.length) : path;
+
+        if (!relative || relative === '/') {
+          window.location.replace(base + '/');
+          return;
+        }
+
+        var target = relative + window.location.search + window.location.hash;
+        window.location.replace(base + '/?/=' + encodeURIComponent(target));
+      })();
+    </script>
+  </head>
+  <body>
+    <p>Restaurando a publicação…</p>
+  </body>
+</html>
