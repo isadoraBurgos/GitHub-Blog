@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { ErrorFeedback } from '@/components/feedback'
 import { IssueGrid, IssuesSkeleton, Pagination } from '@/components/issues'
 import { ProfileCard, ProfileCardSkeleton } from '@/components/profile'
 import { SearchInput } from '@/components/search/SearchInput.tsx'
@@ -23,9 +24,6 @@ interface IssuesContentProps extends IssuesSectionProps {
   reload: () => void
 }
 
-const RETRY_BUTTON_CLASS =
-  'mt-3 inline-flex min-h-11 items-center rounded border border-base-border px-4 py-2 text-sm font-bold text-blue hover:border-blue focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 focus-visible:ring-offset-base-background'
-
 function parsePage(value: string | null): number {
   if (!value) {
     return 1
@@ -44,14 +42,8 @@ function ProfileSection() {
 
   if (error) {
     return (
-      <div
-        role="alert"
-        className="mt-6 rounded-lg border border-base-border bg-base-post p-5 text-sm text-base-text"
-      >
-        <p>{error.message}</p>
-        <button type="button" onClick={reload} className={RETRY_BUTTON_CLASS}>
-          Tentar novamente
-        </button>
+      <div className="mt-6">
+        <ErrorFeedback error={error} onRetry={reload} />
       </div>
     )
   }
@@ -94,15 +86,7 @@ function IssuesContent({
 
       <div className="mt-6">
         {error ? (
-          <div
-            role="alert"
-            className="rounded-lg border border-base-border bg-base-post p-5 text-sm text-base-text"
-          >
-            <p>{error.message}</p>
-            <button type="button" onClick={reload} className={RETRY_BUTTON_CLASS}>
-              Tentar novamente
-            </button>
-          </div>
+          <ErrorFeedback error={error} onRetry={reload} />
         ) : loading ? (
           <IssuesSkeleton />
         ) : (

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { ErrorFeedback, LoadingState } from '@/components/feedback'
 import { PostCard } from '@/components/post'
 import { useIssueDetail } from '@/hooks/useIssueDetail.ts'
 
@@ -34,37 +35,31 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <section
-        aria-live="polite"
-        className="mt-10 rounded-lg border border-base-border bg-base-profile p-6 text-sm text-base-text"
-      >
-        Carregando publicação…
-      </section>
+      <div className="mt-10">
+        <LoadingState label="Carregando publicação…" />
+      </div>
     )
   }
 
   if (error) {
-    const notFound = error.kind === 'not-found'
-
-    return (
-      <section className="mt-10 rounded-lg border border-base-border bg-base-profile p-6">
-        <h1 className="text-2xl font-bold text-base-title">
-          {notFound ? error.message : 'Não foi possível carregar a publicação.'}
-        </h1>
-        <p className="mt-3 text-sm text-base-text">
-          {notFound ? 'O endereço pode ter mudado ou a publicação não existe mais.' : error.message}
-        </p>
-        <div className="mt-6 flex flex-wrap gap-4">
-          <Link to="/" className={LINK_CLASS}>
+    if (error.kind === 'not-found') {
+      return (
+        <section className="mt-10 rounded-lg border border-base-border bg-base-profile p-6">
+          <h1 className="text-2xl font-bold text-base-title">{error.message}</h1>
+          <p className="mt-3 text-sm text-base-text">
+            O endereço pode ter mudado ou a publicação não existe mais.
+          </p>
+          <Link to="/" className={`mt-6 ${LINK_CLASS}`}>
             Voltar à Home
           </Link>
-          {notFound ? null : (
-            <button type="button" onClick={reload} className={LINK_CLASS}>
-              Tentar novamente
-            </button>
-          )}
-        </div>
-      </section>
+        </section>
+      )
+    }
+
+    return (
+      <div className="mt-10">
+        <ErrorFeedback error={error} onRetry={reload} />
+      </div>
     )
   }
 
