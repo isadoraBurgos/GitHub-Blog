@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta — protótipo Figma */
+  --color-blue:            #3294F8;
+  --color-base-title:      #E7EDF4;
+  --color-base-subtitle:   #C4D4E3;
+  --color-base-text:       #AFC2D4;
+  --color-base-span:       #7B96B2;
+  --color-base-label:      #3A536B;
+  --color-base-border:     #1C2F41;
+  --color-base-post:       #112131;
+  --color-base-profile:    #0B1B2B;
+  --color-base-background: #071422;
+  --color-base-input:      #040F1A;
+
+  /* Tipografia — Nunito 400/700, line-height 160% */
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  --text-xs: 12px;   --text-xs--line-height: 160%;
+  --text-sm: 14px;   --text-sm--line-height: 160%;
+  --text-base: 16px; --text-base--line-height: 160%;
+  --text-lg: 18px;   --text-lg--line-height: 160%;
+  --text-xl: 20px;   --text-xl--line-height: 160%;
+  --text-2xl: 24px;  --text-2xl--line-height: 160%;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    line-height: 160%;
+  }
+}
