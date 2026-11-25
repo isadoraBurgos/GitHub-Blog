@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import { Container, Header } from '@/components/layout'
 import HomePage from '@/pages/HomePage.tsx'
+import PostPage from '@/pages/PostPage.tsx'
 
 export default function App() {
   return (
@@ -11,7 +12,7 @@ export default function App() {
         <Container>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/post/:number" element={<p>Publicação — em breve.</p>} />
+            <Route path="/post/:number" element={<PostPage />} />
             <Route path="*" element={<p>Página não encontrada.</p>} />
           </Routes>
         </Container>
