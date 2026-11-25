@@ -13,6 +13,11 @@
     "moduleDetection": "force",
     "noEmit": true,
 
+    /* Strict typing */
+    "strict": true,
+    "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
