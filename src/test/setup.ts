@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
 import { afterAll, afterEach, beforeAll, beforeEach, vi } from 'vitest'
-import { requestLog, server } from './handlers.ts'
+import { requestLog, searchLog, server, setSearchStatus } from './handlers.ts'
 
 beforeAll(() => {
   server.listen({ onUnhandledFrame: 'error' })
@@ -19,6 +19,8 @@ afterEach(() => {
   }
 
   requestLog.splice(0, requestLog.length)
+  searchLog.splice(0, searchLog.length)
+  setSearchStatus(200)
 })
 
 afterAll(() => {

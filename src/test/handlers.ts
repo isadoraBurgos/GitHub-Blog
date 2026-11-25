@@ -10,6 +10,21 @@ export interface RequestRecord {
 
 export const requestLog: RequestRecord[] = []
 
+export interface SearchRequestRecord {
+  q: string | null
+  page: string | null
+  perPage: string | null
+}
+
+export const searchLog: SearchRequestRecord[] = []
+
+let searchStatus = 200
+
+/** Controla o cenário de rate limit sem precisar de um handler separado. */
+export function setSearchStatus(status: number): void {
+  searchStatus = status
+}
+
 /**
  * O jsdom trata a API como cross-origin: sem `Allow-Origin` o XHR cai em `onerror`,
  * e sem `Expose-Headers` o cliente não consegue ler o `Link` da paginação.
@@ -65,7 +80,41 @@ const pullRequest: GitHubIssue = {
   },
 }
 
+function searchResult(term: string, page: number): GitHubIssue {
+  const word = term.trim().split(/\s+/).at(-1) ?? 'termo'
+
+  return {
+    ...makeIssue(300 + page),
+    title: `Resultado ${word}`,
+  }
+}
+
 export const handlers = [
+  http.get(`${GITHUB_API}/search/issues`, ({ request }) => {
+    const url = new URL(request.url)
+    searchLog.push({
+      q: url.searchParams.get('q'),
+      page: url.searchParams.get('page'),
+      perPage: url.searchParams.get('per_page'),
+    })
+
+    if (searchStatus !== 200) {
+      return new HttpResponse(null, { status: searchStatus, headers: CORS_HEADERS })
+    }
+
+    const term = url.searchParams.get('q') ?? ''
+    const page = Number(url.searchParams.get('page') ?? '1')
+
+    return HttpResponse.json(
+      {
+        total_count: 1,
+        incomplete_results: false,
+        items: [searchResult(term, page)],
+      },
+      { headers: CORS_HEADERS },
+    )
+  }),
+
   http.get(`${GITHUB_API}/users/:username`, ({ params }) => {
     if (params.username !== USERNAME) {
       return new HttpResponse(null, { status: 404, headers: CORS_HEADERS })
