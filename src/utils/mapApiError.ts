@@ -14,6 +14,14 @@ function hasCode(error: unknown, code: string): boolean {
   return typeof error === 'object' && error !== null && 'code' in error && error.code === code
 }
 
+/** Erro 404 amigável, também usado quando o número da URL é inválido. */
+export function notFoundBlogError(context: ErrorContext = 'default'): BlogError {
+  return {
+    kind: 'not-found',
+    message: context === 'detail' ? DETAIL_NOT_FOUND_MESSAGE : NOT_FOUND_MESSAGE,
+  }
+}
+
 /**
  * Converte qualquer falha em mensagem amigável (RN-06/RN-08).
  * Retorna `null` para cancelamento via AbortController — não é erro para o usuário (RN-05).
@@ -32,10 +40,7 @@ export function mapApiError(error: unknown, context: ErrorContext = 'default'): 
     }
 
     if (status === 404) {
-      return {
-        kind: 'not-found',
-        message: context === 'detail' ? DETAIL_NOT_FOUND_MESSAGE : NOT_FOUND_MESSAGE,
-      }
+      return notFoundBlogError(context)
     }
 
     if (
