@@ -18,6 +18,8 @@ export interface SearchRequestRecord {
 
 export const searchLog: SearchRequestRecord[] = []
 
+export const detailLog: number[] = []
+
 let searchStatus = 200
 
 /** Controla o cenário de rate limit sem precisar de um handler separado. */
@@ -80,6 +82,33 @@ const pullRequest: GitHubIssue = {
   },
 }
 
+const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+
+const detailIssue: GitHubIssue = {
+  ...makeIssue(42),
+  title: 'Publicação 42',
+  body: [
+    '## Título do corpo',
+    '',
+    '- primeiro item',
+    '- segundo item',
+    '',
+    '[Documentação](https://example.com/docs)',
+    '',
+    '```js',
+    'console.log("olá")',
+    '```',
+  ].join('\n'),
+  created_at: new Date(Date.now() - TWO_DAYS_MS).toISOString(),
+  updated_at: new Date(Date.now() - TWO_DAYS_MS).toISOString(),
+  comments: 3,
+  user: {
+    login: 'autor',
+    avatar_url: 'https://example.com/avatar.png',
+    html_url: 'https://example.com/autor',
+  },
+}
+
 function searchResult(term: string, page: number): GitHubIssue {
   const word = term.trim().split(/\s+/).at(-1) ?? 'termo'
 
@@ -121,6 +150,21 @@ export const handlers = [
     }
 
     return HttpResponse.json(profile, { headers: CORS_HEADERS })
+  }),
+
+  http.get(`${GITHUB_API}/repos/:username/:repo/issues/:number`, ({ params }) => {
+    if (params.username !== USERNAME || params.repo !== REPO) {
+      return new HttpResponse(null, { status: 404, headers: CORS_HEADERS })
+    }
+
+    const number = Number(params.number)
+    detailLog.push(number)
+
+    if (number !== 42) {
+      return new HttpResponse(null, { status: 404, headers: CORS_HEADERS })
+    }
+
+    return HttpResponse.json(detailIssue, { headers: CORS_HEADERS })
   }),
 
   http.get(`${GITHUB_API}/repos/:username/:repo/issues`, ({ request, params }) => {
