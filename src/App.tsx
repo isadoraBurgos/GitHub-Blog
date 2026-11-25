@@ -1,7 +1,20 @@
+import { Route, Routes } from 'react-router-dom'
+import { Container, Header } from '@/components/layout'
+
 export default function App() {
   return (
-    <main>
-      <h1>GitHub Blog</h1>
-    </main>
+    <div className="min-h-screen bg-base-background text-base-text">
+      <Header />
+
+      <main id="conteudo" tabIndex={-1} className="focus:outline-none">
+        <Container>
+          <Routes>
+            <Route path="/" element={<p>Home — em breve.</p>} />
+            <Route path="/post/:number" element={<p>Publicação — em breve.</p>} />
+            <Route path="*" element={<p>Página não encontrada.</p>} />
+          </Routes>
+        </Container>
+      </main>
+    </div>
   )
 }
